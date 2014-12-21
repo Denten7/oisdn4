@@ -135,6 +135,8 @@ function EHRprofile() {
                 console.log(JSON.parse(err.responseText).userMessage);
             }
         });
+        $("#teza1").text("");
+        $("#visina1").text("");
         $.ajaxSetup({
             headers: {
                 "Ehr-Session": sessionId
@@ -146,6 +148,7 @@ function EHRprofile() {
             success: function (res) {
                 $("#teza1").text(res[0].weight)
             }
+
         });
         $.ajax({
             url: baseUrl + "/view/" + ehrId + "/height",
@@ -300,11 +303,11 @@ function zgodovinaMerjenjTemp() {
         var AQL =
             "select " +
             "t/data[at0002]/events[at0003]/time/value as time, " +
-            "t/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/weight as temperatura_telesa, " +
+            "t/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude as temperatura_telesa, " +
             "t/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/units as enota " +
             "from EHR e[e/ehr_id/value='" + ehrId + "'] " +
-            "contains OBSERVATION t[openEHR-EHR-OBSERVATION.body_weight.v1] " +
-            "where t/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/weight>37.2 " +
+            "contains OBSERVATION t[openEHR-EHR-OBSERVATION.body_temperature.v1] " +
+            "where t/data[at0002]/events[at0003]/data[at0001]/items[at0004]/value/magnitude>37.2 " +
             "order by t/data[at0002]/events[at0003]/time/value desc " +
             "limit 5";
 
@@ -365,6 +368,7 @@ function zgodovinaMerjenjTeza() {
             console.log(JSON.parse(err.responseText).userMessage);
         }
     });
+
 }
 
 function zgodovinaMerjenjTlak() {
@@ -482,6 +486,13 @@ $(document).ready(function(){
 
     $('#preberiEHR').change(function() {
         $("#SearchEHR").val($(this).val());
+    });
+
+    $('#preberiEHR1').change(function() {
+        var podatki = $(this).val().split(",");
+        $("#ime").val(podatki[0]);
+        $("#priimek").val(podatki[1]);
+        $("#datum").val(podatki[2]);
     });
 
 });
